@@ -8,7 +8,7 @@
 
  Expected output:
 
- Hello World
+ Hello Bellevue Students
 
 */
 
@@ -23,7 +23,7 @@ console.log('\n');
 var http = require("http");
 function processRequest(req, res) {
 
-var body = "Hello World";
+var body = "Hello Bellevue Students";
     var contentLength = body.length;
 
     res.writeHead(200, {
