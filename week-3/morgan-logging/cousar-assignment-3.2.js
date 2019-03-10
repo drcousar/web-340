@@ -1,3 +1,21 @@
+/*
+============================================
+; Title:  Assignment 3.2
+; Author: Don Cousar
+; Date:   10 Mar 2019
+; Description: This program demonstrates the
+;   use of Logging
+;===========================================
+
+*/
+
+// start program
+
+//Call Header Info
+var header = require('../../cousar-header');
+console.log(header.display("Donald", "Cousar","Exersize 3.2"));
+console.log('\n');
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
