@@ -1,0 +1,9 @@
+{
+    "name": "status-codes",
+    "author": "Don Cousar",
+    "private": true,
+    "verson": "0.0.1",
+    "dependencies": {
+        "express": "^4.16.4"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "name": "if-else-render",
+    "author": "Don Cousar",
+    "private": true,
+    "verson": "0.0.1",
+    "dependencies": {
+        "ejs": "^2.6.1",
+        "express": "^4.16.4"
+    }
+}
