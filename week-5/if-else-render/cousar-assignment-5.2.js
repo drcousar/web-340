@@ -1,6 +1,6 @@
 /*
 ============================================
-; Title:  cousar-assignment-5.3.js
+; Title:  cousar-assignment-5.2.js
 ; Author: Don Cousar
 ; Modified By: Don Cousar
 ; Date:   24 March 2019
@@ -11,7 +11,7 @@
 
 //Call Header Info
 var header = require('../../cousar-header');
-console.log(header.display("Donald", "Cousar","Exersize 5.3"));
+console.log(header.display("Donald", "Cousar","Exersize 5.2"));
 console.log('\n');
 
 var express = require("express");
