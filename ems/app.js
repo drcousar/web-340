@@ -19,6 +19,11 @@ var http = require("http");
 var path = require("path");
 var logger = require("morgan");
 var app = express();
+var Employee = require("./models/employee");
+var mongoose = require("mongoose");
+
+//MongoDB connection
+var mongoDB="mongodb+srv://admin:admin@cluster0-zttjc.mongodb.net/test?retryWrites=true";
 
 //Handle Views
 app.set("views", path.resolve(__dirname, "views"));
@@ -44,6 +49,25 @@ app.get("/contact", function (request, response) {
     response.render("index", {
         title: "Contact page"
     });
+});
+
+//Connect to MongoDB
+
+mongoose.connect(mongoDB, {
+    useNewUrlParser: true
+});
+
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "MondoDB connection error: "));
+db.once("open", function() {
+    console.log("Application connected to mLab MongoDB instance");
+});
+
+//Employee Model
+var employee = new Employee({
+    firstname: "Don",
+    lastName: "Cousar"
 });
 
 //Start http server
