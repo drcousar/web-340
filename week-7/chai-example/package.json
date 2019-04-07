@@ -1,0 +1,10 @@
+{
+    "name": "chai-example",
+    "author": "Don Cousar",
+    "private": true,
+    "verson": "0.0.1",
+    "dependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^6.0.2"
+    }
+}
