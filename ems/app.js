@@ -22,6 +22,12 @@ var app = express();
 var Employee = require("./models/employee");
 var mongoose = require("mongoose");
 var helmet = require("helmet");
+var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+var csrf = require("csurf");
+
+//setup CSRF Protection
+var csrfProtection = csrf({cookie: true});
 
 //MongoDB connection
 var mongoDB="mongodb+srv://admin:admin@cluster0-zttjc.mongodb.net/test?retryWrites=true";
@@ -30,6 +36,20 @@ var mongoDB="mongodb+srv://admin:admin@cluster0-zttjc.mongodb.net/test?retryWrit
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(logger("short"));
+app.use(cookieParser());
+app.use(csrfProtection);
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(function(request, response, next) {
+    var token = request.csrfToken();
+    response.cookie('XSRF-TOKEN', token);
+    response.locals.csrfToken = token;
+    next();
+    console.log(token);
+});
 
 //Home Page Route
 app.get("/", function (request, response) {
@@ -52,8 +72,18 @@ app.get("/contact", function (request, response) {
     });
 });
 
-//Connect to MongoDB
+app.get("/new", function (request, response) {
+    response.render("new", {
+        title: "New Employee"
+    });
+});
 
+app.post("/process", function(request, response) {
+    console.log(request.body.txtName);
+    response.redirect("/");
+});
+
+//Connect to MongoDB
 mongoose.connect(mongoDB, {
     useNewUrlParser: true
 });
