@@ -38,7 +38,7 @@ app.set("view engine", "ejs");
 app.use(logger("short"));
 app.use(cookieParser());
 app.use(csrfProtection);
-
+app.use(helmet.xssFilter());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -50,6 +50,8 @@ app.use(function(request, response, next) {
     next();
     console.log(token);
 });
+
+
 
 //Home Page Route
 app.get("/", function (request, response) {
@@ -79,8 +81,35 @@ app.get("/new", function (request, response) {
 });
 
 app.post("/process", function(request, response) {
-    console.log(request.body.txtName);
-    response.redirect("/");
+    if (!request.body.firstName || !request.body.lastName) {
+        res.status(400).send("Entries require a name");
+        return;
+      }
+      var firstName = req.body.firstName;
+      var lastName = req.body.lastName;
+
+      // Create employee model
+      var newEmployee = new Employee({
+        firstName,
+        lastName
+      });
+    
+      // save
+      newEmployee.save(function(error) {
+        if (error) throw error;
+        console.log(newEmployee + " Saved New Employee");
+      });
+      response.redirect("/list");
+});
+
+app.get("/list", function(request, response) {
+    Employee.find({}, function(error, employees) {
+       if (error) throw error;
+       response.render("list", {
+           title: "Employee List",
+           employees: employees
+       })
+    });
 });
 
 //Connect to MongoDB
