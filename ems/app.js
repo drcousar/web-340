@@ -9,9 +9,9 @@
 // start program
 
 //Call Header Info
-var header = require('../cousar-header');
-console.log(header.display("Donald", "Cousar","EMS Project"));
-console.log('\n');
+//var header = require('../cousar-header');
+//console.log(header.display("Donald", "Cousar","EMS Project"));
+//console.log('\n');
 
 //Require Libraries
 var express = require("express");
@@ -26,111 +26,124 @@ var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var csrf = require("csurf");
 
-//setup CSRF Protection
-var csrfProtection = csrf({cookie: true});
-
-//MongoDB connection
-var mongoDB="mongodb+srv://admin:admin@cluster0-zttjc.mongodb.net/test?retryWrites=true";
-
-//Handle Views
-app.set("views", path.resolve(__dirname, "views"));
-app.set("view engine", "ejs");
-app.use(logger("short"));
-app.use(cookieParser());
-app.use(csrfProtection);
-app.use(helmet.xssFilter());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-app.use(function(request, response, next) {
-    var token = request.csrfToken();
-    response.cookie('XSRF-TOKEN', token);
-    response.locals.csrfToken = token;
-    next();
-    console.log(token);
-});
-
-
-
-//Home Page Route
-app.get("/", function (request, response) {
-    response.render("index", {
-        title: "Home Page"
-    });
-});
-
-//About Route - may replace as I progress with content
-app.get("/about", function (request, response) {
-    response.render("index", {
-        title: "About Page"
-    });
-});
-
-//Contact Route - may replace as I progress with content
-app.get("/contact", function (request, response) {
-    response.render("index", {
-        title: "Contact page"
-    });
-});
-
-app.get("/new", function (request, response) {
-    response.render("new", {
-        title: "New Employee"
-    });
-});
-
-app.post("/process", function(request, response) {
-    if (!request.body.firstName || !request.body.lastName) {
-        res.status(400).send("Entries require a name");
-        return;
-      }
-      var firstName = req.body.firstName;
-      var lastName = req.body.lastName;
-
-      // Create employee model
-      var newEmployee = new Employee({
-        firstName,
-        lastName
-      });
-    
-      // save
-      newEmployee.save(function(error) {
-        if (error) throw error;
-        console.log(newEmployee + " Saved New Employee");
-      });
-      response.redirect("/list");
-});
-
-app.get("/list", function(request, response) {
-    Employee.find({}, function(error, employees) {
-       if (error) throw error;
-       response.render("list", {
-           title: "Employee List",
-           employees: employees
-       })
-    });
-});
-
-//Connect to MongoDB
+//Connect to Mongo DB
+var mongoDB = "mongodb+srv://admin:admin@cluster0-zttjc.mongodb.net/test?retryWrites=true";
 mongoose.connect(mongoDB, {
     useNewUrlParser: true
 });
 
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
-db.on("error", console.error.bind(console, "MondoDB connection error: "));
-db.once("open", function() {
-    console.log("Application connected to mLab MongoDB instance");
+db.on("error", console.error.bind(console, "MongoDB connected error: "));
+db.once("open", function () {
+    console.log("Application connected to mLab MongoDB")
 });
 
-//Employee Model
-var employee = new Employee({
-    firstname: "Don",
-    lastName: "Cousar"
+//Set csrf protection 
+var csrfProtection = csrf({
+    cookie: true
 });
 
-//Start http server
-http.createServer(app).listen(8080, function() {
-    console.log("Application started on port 8080!");
+//Set EJS view engine
+app.set("views", path.resolve(__dirname, "views"));
+app.set("view engine", "ejs");
+app.set('port', process.env.PORT || 8080);
+
+//Instantiate use statements
+app.use(logger("short"));
+app.use(
+    bodyParser.urlencoded({
+        extended: true
+    })
+);
+app.use(cookieParser());
+app.use(csrfProtection);
+app.use(function (request, response, next) {
+    var token = request.csrfToken();
+    response.cookie("XSRF-TOKEN", token);
+    response.locals.csrfToken = token;
+    next();
+});
+app.use(express.static(__dirname + '/public'));
+app.use(helmet.xssFilter());
+
+//Setup Routing
+app.get("/", function (req, res) {
+    Employee.find({}, function (err, employees) {
+        if (err) {
+            console.log(err)
+            throw err;
+        } else {
+            console.log(employees);
+            res.render('index', {
+                title: 'EMS|Home',
+                employees: employees
+            })
+        }
+    });
+});
+
+//Render Employee List
+app.get("/list",function(req,res){
+    Employee.find({},function(error,employees){
+        if(error)throw error;
+        res.render("list",{
+            title:'Employee List',
+            employee:employees
+        })
+    })
+})
+
+//Render New Employee
+app.get("/new", function (request, response) {
+    response.render("new", {
+        title: 'EMS|New'
+    });
+});
+
+app.get("/view/:queryName", function (request, response) {
+    var queryName = request.params.queryName;
+    Employee.find({'name': queryName}, function(error, employees) {
+        if (error) throw error;
+        console.log(employees);
+
+        if (employees.length > 0) {
+            response.render("view", {
+                title: "Employee Record",
+                employee: employees
+            })
+        }
+        else {
+            response.redirect("/list")
+        }
+    });
+});
+
+//Process Employees
+app.post("/process", function (req, res) {
+    //Get requests data 
+    const employeeName = req.body.txtName;
+    console.log(employeeName)
+
+    //Employee model
+    var employee = new Employee({
+        name: employeeName
+    });
+
+    //Save employee
+    employee.save(function (err) {
+        if (err) {
+            console.log(err);
+            throw err;
+        } else {
+            console.log(employeeName + 'saved');
+            res.redirect('/')
+        }
+    });
+
+})
+
+//creating node web server
+http.createServer(app).listen(8080, function () {
+    console.log("Application started on port 8080!")
 });

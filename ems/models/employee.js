@@ -1,25 +1,19 @@
 /*
 ============================================
-; Title:  Mongoose - Employee
-; Author: Don Cousar
-; Date:   7 April 2019
-; Description: Employee Schema
+; Title:  employee.js
+; Author: Griselda Balmaceda
+; Date:   07 April 2019
+; Description: File for the Employee database model
 ;===========================================
 */
-// Start program
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-//define employee schema
-var employeeSchema = new Schema({
-    firstName: String,
-    lastName: String
-});
+//employee scheema
+let EmployeeSchema = new Schema({
+    name:{type:String,required:true},
+ 
+})
 
-//define the employee model
-var Employee = mongoose.model("Employee", employeeSchema);
-
-//expose employee
-module.exports = Employee;
-
-// End Program
+//exporting model 
+module.exports= mongoose.model('Employee', EmployeeSchema)

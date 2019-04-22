@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<% include header%>
-
-<body>
-<% include navbar %>
-
-<div role="main" class="container">
-    <br />
-    <br />
-
-    <% if (employees.length > 0) { %>
-    <h2>Employees:</h2>
-    <br />
-    <a href="/new">Add New Employee</a>
-    <table class="table table-dark table-striped table-hover">
-        <thead class="thead-dark">
-            <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Functions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% employees.forEach(function (employee) { %>
-            <tr>
-            <td><%= employee.firstName %></td>
-            <td><%= employee.lastName %></td>
-            <td><a id="viewLink" href="/view/<%= employee %>">View</a></td>
-            </tr>
-        </tbody>
-        <% }) %>
-    </table>
-    <% } else { %> No entries found <a href="/new">Add employee</a>
-    <% } %>
-    <br />
-</div>
-
-<% include scripts %>
-</body>
+<% include header %>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2">
+                    <% include navbar %>
+                </div>
+                <div class="col-10">
+                    <% if(employee.length) { %>
+                    <h2  class="text-center">Employee List</h2><br />
+                    <div class="card" style="margin-top: 0">
+                        <table class="table table‐hover">
+                            <thead class="thead‐dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Functions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% employee.forEach(function (entry) { %>
+                                <tr>
+                                    <td><%= entry.name %></td>
+                                    <td><a href="/view/<%= entry.name %>" target="new">VIEW</a></td>
+                                </tr>
+                            </tbody>
+                            <% }) %>
+                        </table>
+                        <% } else { %>
+                        No entries! <a href="/new">Add one!</a>
+                        <% } %>
+                    </div>
+                    <div style="text-align: center;margin-top:10px">
+                        <a href="/new"><button class="btn btn-outline-primary">Add New</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% include scripts %>
+    </body>
 </html>

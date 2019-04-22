@@ -1,0 +1,48 @@
+
+.container-fluid{
+   width:100%;
+   padding-right: 0px!important;
+   padding-left: 0px!important;
+   margin-right:auto;
+   margin-left: auto;
+}
+.sidebar{
+   height: 100vh;
+   color:white;
+   top:0;
+   bottom: 0;
+   padding: 50px;
+   background-image: linear-gradient(#37A9FE,#6A63FB, #913FF7 );
+   text-align: center
+}
+.logo{
+   text-align: center;
+}
+.logo>.fas{
+font-size: 45px;
+}
+li>.fas,.far{
+margin-right: 5px;
+font-size: 25px;
+}
+a{
+   color:white!important;
+}
+ul{
+   line-height: 100px;
+}
+.footer{
+   position: absolute;
+   bottom: 0;
+}
+.welcomeMessage{
+   margin: auto;
+   width: 100%;
+   text-align: center;
+   margin-top: 20%;
+}
+.card{
+   margin:auto;
+   width:50%;
+   margin-top: 15%;
+}
