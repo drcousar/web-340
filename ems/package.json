@@ -12,5 +12,7 @@
         "mongoose": "^5.5.2",
         "morgan": "^1.9.1",
         "nodemon": "^1.18.11"
-    }
+    },
+    "scripts": {"start": "node app.js"},
+    "engines": {"node": "10.14.0"}
 }
